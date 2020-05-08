@@ -15,7 +15,7 @@ public:
 
     void insert();
     void querySingle(int Id);
-
+    void queryPopulation(int Id);
     QString queryMapShape(int Id);
 
     QString queryMapLoc(int Id);

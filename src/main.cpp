@@ -2,40 +2,25 @@
 #include "information.h"
 #include "database.h"
 #include "image.h"
+#include "inputoutput.h"
 #include <QDebug>
-#include <iostream>
+#include <list>
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
 using namespace std;
-//#include <image.h>
+
 
 
 int main() {
-
-    int height = 200;
-    int width = 200;
     int countyHeight = 0;
     int countyWidth = 0;
+    int keepRunning = 0;
     string countyName;
-    int population, countyId;
     double area, perimeter;
-    const int bytesPerPixel = 3; /// red, green, blue
-    unsigned char image[height][width][bytesPerPixel];
-    char* imageFileName = "IowaCountyImage.bmp";
 
     cout << "Welcome to the VisMapDb Program" << endl;
-    //cout << "Input the name of the county you want to work with." << endl;
-    //cin >> countyName;
-    //cout << "Input the population of the county." << endl;
-    //cin >> population;
-    /*cout << "Enter the length of the county." << endl;
-    cin >> countyHeight;
-    cout << "Enter the width of the county." << endl;
-    cin >> countyWidth;
-    */
-    cout << "Enter the ID of the county you want the map of." << endl;
-    cin >> countyId;
+    cout << "-------------------------------" << endl;
 
     Information info;
     try
@@ -69,30 +54,67 @@ int main() {
     mydatabase.createTable();
     mydatabase.insert();
 
-    qDebug() << "County Shape: " << mydatabase.queryMapShape(countyId) << endl;
-    QString shapeStr = mydatabase.queryMapShape(countyId);
-    string str = shapeStr.toLocal8Bit().constData();
-    int n = std::count(shapeStr.begin(), shapeStr.end(), 'w');
-    replace(str.begin(), str.end(), 'w', ' ');
 
-    string myarray[99];
-    string myarray2D[99][2];
-    stringstream ss1(str);
-    string temp;
-    int ii = 0;
-    while (ss1 >> temp){
-        myarray[ii].assign(temp);
-        replace(temp.begin(), temp.end(), 'v', ' ');
-        stringstream ss2(temp);
-        int jj = 0;
-         while (ss2 >> temp){
-             myarray2D[ii][jj].assign(temp);
-             jj++;
-         }
-        ii++;
+    InputOutput io;
+    list<int> tempList;
+    while (keepRunning != -1){
+        cout << "Here are your counties." << endl;
+        cout << "Id \t Name" << endl;
+        cout << "--------------------------" << endl;
+        mydatabase.queryMultiple();
+        cout << endl;
+        cout << "What do you want to do:" << endl;
+        cout << "1 : Generate a map" << endl;
+        cout << "2 : get statistics" << endl;
+        cout << "3 : Enter map shape features and statistics" << endl;
+        cout << "-1: Quit" << endl;
+        int numChoice;
+        cin >> numChoice;
+        if (numChoice == -1){
+            cout << "Thank you" << endl;
+            keepRunning = numChoice;
+        }
+        else if (numChoice == 1){
+            tempList = io.getMaps();
+            list<list<list<int> > > county_list;
+            list<list<int> > single_list;
+            list<int> point_list;
+
+            for (auto it = tempList.begin(); it != tempList.end(); ++it) {
+                QString shapeStr = mydatabase.queryMapShape(*it);
+                string str = shapeStr.toLocal8Bit().constData();
+                replace(str.begin(), str.end(), 'w', ' ');
+                stringstream ss1(str);
+                string temp;
+                int tempint;
+                int ii = 0;
+                while (ss1 >> temp){
+                    replace(temp.begin(), temp.end(), 'v', ' ');
+                    stringstream ss2(temp);
+                    int jj = 0;
+                     while (ss2 >> tempint){
+                         point_list.push_back(tempint);
+                         jj++;
+                     }
+                     single_list.push_back(point_list);
+                     point_list.erase(point_list.begin(), point_list.end());
+                    ii++;
+                }
+                county_list.push_back(single_list);
+                single_list.erase(single_list.begin(), single_list.end());
+            }
+                Image myimage;
+                myimage.saveImage(county_list);
+        }
+        else if (numChoice == 2){
+            tempList = io.getStats();
+            for (auto it = tempList.begin(); it != tempList.end(); ++it) {
+                mydatabase.queryPopulation(*it);
+            }
+        }
+        else{
+            io.writeInfo();
+        }
     }
-    Image myimage;
-    myimage.saveImage(myarray2D, n);
-    return 0;
+        return 0;
 }
-

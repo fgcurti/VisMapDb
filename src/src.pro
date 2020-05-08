@@ -1,4 +1,4 @@
-QT -= gui
+zQT -= gui
 QT += core gui sql
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -18,7 +18,9 @@ SOURCES += \
         database.cpp \
         image.cpp \
         information.cpp \
-        main.cpp
+        inputoutput.cpp \
+        main.cpp \
+        mapclass.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -28,4 +30,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     database.h \
     image.h \
-    information.h
+    information.h \
+    inputoutput.h \
+    mapclass.h

@@ -1,36 +1,63 @@
 #include "image.h"
-
-
-
-
+#include <iostream>
+#include <iterator>
+#include <list>
 
 Image::Image()
 {
 
 }
-void Image::saveImage(string (&myarray2D)[99][2], int n){
-    cout << endl;
-    cout << endl;
-    for (int l =0; l <= n; l++){
-    }
-    cout << endl;
-    cout << endl;
-    cout << endl;
-
-    int height = 200;
-    int width = 200;
+void Image::saveImage(list<list<list<int> > > county_list){
+    int height = 572;
+    int width = 839;
+    const int bytesPerPixel = 3;
     string countyName;
     unsigned char image[height][width][bytesPerPixel];
     char* imageFileName = "IowaCountyImage.bmp";
     int i, j;
     for(i=0; i<height; i++){
         for(j=0; j<width; j++){
-            image[i][j][2] = (unsigned char)((double)255); ///red
-            image[i][j][1] = (unsigned char)((double)255); ///green
-            image[i][j][0] = (unsigned char)(((double)255)); ///blue
+            image[i][j][2] = (unsigned char)((double)255);
+            image[i][j][1] = (unsigned char)((double)255);
+            image[i][j][0] = (unsigned char)(((double)255));
         }
     }
-    cout << endl << endl;
+
+    int myarray2D[99][2];
+    int q = 0;
+    int r = 0;
+    int s = 0;
+
+    list<list<list<int> > >::iterator county_list_itr;
+
+    for (county_list_itr = county_list.begin();
+         county_list_itr != county_list.end();
+         ++county_list_itr) {
+
+        r = 0;
+        list<list<int>>::iterator single_list_itr;
+
+        list<list<int>>& single_list_pointer = *county_list_itr;
+
+        for (single_list_itr = single_list_pointer.begin();
+             single_list_itr != single_list_pointer.end();
+             single_list_itr++) {
+                list<int>::iterator point_list_itr;
+
+                list<int>& point_list_pointer = *single_list_itr;
+                s = 0;
+                for (point_list_itr = point_list_pointer.begin();
+                     point_list_itr != point_list_pointer.end();
+                     point_list_itr++) {
+
+                        myarray2D[r][s] = *point_list_itr;
+                    s++;
+                }
+                r++;
+        }
+
+
+    int n = r - 1;
 
     int a = 0;
     int x1 = 0;
@@ -39,23 +66,23 @@ void Image::saveImage(string (&myarray2D)[99][2], int n){
     int y2 = 0;
     for (a = 0; a <= n; a++){
         if (a == n){
-            x1 = stoi(myarray2D[0][0]);
-            y1 = stoi(myarray2D[0][1]);
-            x2 = stoi(myarray2D[a][0]);
-            y2 = stoi(myarray2D[a][1]);
+            x1 = myarray2D[0][0];
+            y1 = myarray2D[0][1];
+            x2 = myarray2D[a][0];
+            y2 = myarray2D[a][1];
         }
         else {
-            x1 = stoi(myarray2D[a][0]);
-            y1 = stoi(myarray2D[a][1]);
-            x2 = stoi(myarray2D[a + 1][0]);
-            y2 = stoi(myarray2D[a + 1][1]);
+            x1 = myarray2D[a][0];
+            y1 = myarray2D[a][1];
+            x2 = myarray2D[a + 1][0];
+            y2 = myarray2D[a + 1][1];
         }
         if (abs(x2-x1) >= abs(y2-y1) ){
             for(j=1; j<=abs(x2 - x1); j++){
                 if (x1 < x2){
-                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][2] = (unsigned char)((double)0); ///red
-                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][1] = (unsigned char)((double)0); ///green
-                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][0] = (unsigned char)(((double)0)); ///blue
+                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][2] = (unsigned char)((double)0);
+                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][1] = (unsigned char)((double)0);
+                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][0] = (unsigned char)(((double)0));
                 }
                 else{
                     int temp = x1;
@@ -64,18 +91,18 @@ void Image::saveImage(string (&myarray2D)[99][2], int n){
                     temp = y1;
                     y1 = y2;
                     y2 = temp;
-                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][2] = (unsigned char)((double)0); ///red
-                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][1] = (unsigned char)((double)0); ///green
-                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][0] = (unsigned char)(((double)0)); ///blue
+                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][2] = (unsigned char)((double)0);
+                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][1] = (unsigned char)((double)0);
+                    image[(int)(y1 + j*((1.0*(y2 - y1))/(1.0*(x2 - x1))))][j + x1][0] = (unsigned char)(((double)0));
                 }
             }
         }
         else{
             for(i=1; i<=abs(y2 - y1); i++){
                 if (y1 < y2){
-                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][2] = (unsigned char)((double)0); ///red
-                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][1] = (unsigned char)((double)0); ///green
-                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][0] = (unsigned char)(((double)0)); ///blue
+                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][2] = (unsigned char)((double)0);
+                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][1] = (unsigned char)((double)0);
+                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][0] = (unsigned char)(((double)0));
                 }
                 else{
                     int temp = x1;
@@ -84,14 +111,18 @@ void Image::saveImage(string (&myarray2D)[99][2], int n){
                     temp = y1;
                     y1 = y2;
                     y2 = temp;
-                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][2] = (unsigned char)((double)0); ///red
-                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][1] = (unsigned char)((double)0); ///green
-                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][0] = (unsigned char)(((double)0)); ///blue
+                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][2] = (unsigned char)((double)0);
+                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][1] = (unsigned char)((double)0);
+                    image[i + y1][(int)(x1 + i*((1.0*(x2 - x1))/(1.0*(y2 - y1))))][0] = (unsigned char)(((double)0));
 
                 }
              }
         }
     }
+
+    q++;
+}
+    // Loop the above with all the individual shapes.
     generateBitmapImage((unsigned char *)image, height, width, imageFileName);
 }
 
