@@ -10,6 +10,7 @@ private:
 public:
     Information();
     double calcArea(double width, double height);
+    double calcArea();
     double calcPerimeter(double width, double height);
     unsigned char* createBitmapFileHeader(int height, int width, int paddingSize);
 };

@@ -14,6 +14,14 @@ double Information::calcArea(double height, double width){
     }
     else
         return height * width;
+}// Calculates Area of square shaped county
+double Information::calcArea(){
+    if (width < 0 || height < 0)
+    {
+        throw "Error: Length or height is negative.\n";
+    }
+    else
+        return height * width;
 }
 // Calculates Perimeter of square shaped county
 double Information::calcPerimeter(double height, double width){

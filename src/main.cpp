@@ -68,7 +68,7 @@ int main() {
         cout << "2 : get statistics" << endl;
         cout << "3 : Enter map shape features and statistics" << endl;
         cout << "-1: Quit" << endl;
-        int numChoice;
+        int numChoice = -1;
         cin >> numChoice;
         if (numChoice == -1){
             cout << "Thank you" << endl;
